@@ -10,8 +10,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (
-    QApplication, QDialog, QMainWindow, QMessageBox
+    QApplication, QDialog, QMainWindow, QMessageBox,QListWidget,QListWidgetItem
 )
+import psycopg2
+
 
 
 class Ui_MainWindow(object):
@@ -40,10 +42,12 @@ class Ui_MainWindow(object):
         self.label_8.setText("")
         self.label_8.setPixmap(QtGui.QPixmap("ui/../img/salon-2.png"))
         self.label_8.setObjectName("label_8")
-        self.listWidget = QtWidgets.QListWidget(self.centralwidget)
-        self.listWidget.setGeometry(QtCore.QRect(370, 240, 256, 291))
-        self.listWidget.setStyleSheet("background-color: rgb(255, 170, 252);")
-        self.listWidget.setObjectName("listWidget")
+        self.QlistWidget = QtWidgets.QListWidget(self.centralwidget)
+        self.QlistWidget.setGeometry(QtCore.QRect(370, 240, 256, 291))
+        self.QlistWidget.setStyleSheet("background-color: rgb(255, 170, 252);")
+        self.QlistWidget.setObjectName("listWidget")
+        #add list here
+        self.fill_list()
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(440, 30, 251, 51))
         font = QtGui.QFont()
@@ -60,6 +64,15 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_2.setText(_translate("MainWindow", "Услуги"))
+    #extra methods
+    def fill_list(self):
+        conn = psycopg2.connect(dbname='салон красоты', user='annasarybaeva', host='localhost')
+        cursor = conn.cursor()
+        cursor.execute('SELECT Название FROM Услуга WHERE Статус=%s',('Активная',))
+        for row in cursor:
+            self.QlistWidget.addItem((row[0].lower()))
+        cursor.close()
+        conn.close()
 class service(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
