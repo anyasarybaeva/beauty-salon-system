@@ -9,7 +9,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from master_window import MasterWindow
-
+from nails_examples import nails_examples
+from about import about
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -99,13 +100,17 @@ class Ui_MainWindow(object):
         self.btn_master.clicked.connect(self.open_master_win)
         self.btn_services.clicked.connect(self.open_master_win)
         self.btn_services_2.clicked.connect(self.open_examples_win)
-        self.btn_services_3.clicked.connect(self.open_master_win)
+        self.btn_services_3.clicked.connect(self.open_about_win)
     #handlers
     def open_master_win(self):
         self.newWin = MasterWindow(self)
         self.hide()
         self.newWin.show()
     def open_examples_win(self):
-        self.newWin = MasterWindow(self)#change
-        self.hide()
+        self.newWin = nails_examples(self)#change
+        #self.hide()
         self.newWin.show()        
+    def open_about_win(self):
+        self.newWin = about(self)#change
+        #self.hide()
+        self.newWin.show()   
