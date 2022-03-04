@@ -13,15 +13,15 @@ from user_win.nails_examples import nails_examples
 from user_win.about import about
 from user_win.service import service
 from user_win.master import master
-
+from admin_win.auth import auth
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 757)
+        MainWindow.resize(800, 800)
         font = QtGui.QFont()
         font.setFamily("Courier New")
         font.setBold(False)
-        font.setWeight(50)
+        font.setWeight(60)
         MainWindow.setFont(font)
         MainWindow.setStyleSheet("background-color: rgb(255, 192, 249);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         self.label.setGeometry(QtCore.QRect(0, 110, 791, 20))
         font = QtGui.QFont()
         font.setFamily("Courier New")
-        font.setPointSize(16)
+        font.setPointSize(30)
         font.setBold(True)
         font.setItalic(False)
         font.setUnderline(False)
@@ -39,7 +39,6 @@ class Ui_MainWindow(object):
         font.setFamily("Courier New")
         self.label.setFont(font)
         self.label.setObjectName("label")
-        self.label.setStyleSheet("color:rgb(10, 0, 0)")
         self.btn_master = QtWidgets.QPushButton(self.centralwidget)
         self.btn_master.setGeometry(QtCore.QRect(400, 170, 200, 40))
         font = QtGui.QFont()
@@ -70,12 +69,15 @@ class Ui_MainWindow(object):
         self.labe_image.setText("")
         self.labe_image.setObjectName("labe_image")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(270, 560, 101, 61))
+        self.label_2.setGeometry(QtCore.QRect(10, 660, 781, 61))
         font = QtGui.QFont()
         font.setFamily("Courier New")
-        font.setPointSize(12)
+        font.setPointSize(10)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(670, 690, 113, 32))
+        self.pushButton.setObjectName("pushButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 24))
@@ -98,16 +100,17 @@ class Ui_MainWindow(object):
         self.btn_services_2.setText(_translate("MainWindow", "Работы"))
         self.btn_services_3.setText(_translate("MainWindow", "О нас"))
         self.label_2.setText(_translate("MainWindow", "Контакты\nтел. 869629372768\nэл.почта: anya.sarybaeva@mail.ru\nадресс: г. Москва ул. Смольная д.5"))
-   
+        self.pushButton.setText(_translate("MainWindow", "Вход"))
+
     def buttons_handlers(self):#method for handlers need fixing
         self.btn_master.clicked.connect(self.open_master_win)
         self.btn_services.clicked.connect(self.open_service_win)
         self.btn_services_2.clicked.connect(self.open_examples_win)
         self.btn_services_3.clicked.connect(self.open_about_win)
+        self.pushButton.clicked.connect(self.open_auth)
     #handlers
     def open_master_win(self):
         self.newWin = master(self)
-        self.hide()
         self.newWin.show()
     def open_service_win(self):
         self.newWin = service(self)
@@ -120,4 +123,8 @@ class Ui_MainWindow(object):
     def open_about_win(self):
         self.newWin = about(self)
         #self.hide()
+        self.newWin.show()   
+    def open_auth(self):
+        self.newWin = auth(self)
+        self.hide()
         self.newWin.show()   
