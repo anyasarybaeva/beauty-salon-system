@@ -1,4 +1,5 @@
 
+from keyword import softkwlist
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (
     QApplication, QDialog, QMainWindow, QMessageBox,QListWidget,QListWidgetItem
@@ -6,7 +7,7 @@ from PyQt5.QtWidgets import (
 from admin_win.ui_win.lk import Ui_MainWindow
 from utils.utils import db
 from admin_win.dialog_win.dialog_win import good,error
-
+global n
 class lk(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -14,7 +15,6 @@ class lk(QMainWindow, Ui_MainWindow):
         self.help=db()
         self.tableWidget.setSortingEnabled(True)
         self.tableWidget_2.setSortingEnabled(True)
-        self.fill_table_zanis()
         self.fill_table_material()
         self.pushButton_2.clicked.connect(self.btn_handler)
         self.pushButton.clicked.connect(self.btn_mat_handler)
@@ -25,11 +25,14 @@ class lk(QMainWindow, Ui_MainWindow):
         cursor.execute('SELECT ФИО FROM Сотрудник WHERE Код=%s',(number,))
         for row in cursor:
             self.name_label.setText(row[0]+"  личный кабинет")
+        self.num=number
+        self.fill_table_zanis()
+
         cursor.close()
         
     def fill_table_zanis(self):
         cursor1 = self.help.conn.cursor()
-        cursor1.execute('SELECT Номер,Номер_телефона,Название_услуги,Дата ,Статус FROM Запись')
+        cursor1.execute('SELECT Номер,Номер_телефона,Название_услуги,Дата ,Статус FROM Запись WHERE Код_сотрудника=%s',(int(self.num),))
         self.tableWidget_2.setRowCount(100)
         tablerow=0
         self.dict={}

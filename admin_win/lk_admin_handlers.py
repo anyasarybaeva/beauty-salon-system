@@ -351,6 +351,7 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         cursor.close()
 
     def btn_find_zap(self):
+        self.help=db()
         cursor = self.help.conn.cursor()
         if self.lineEdit_5.text()=="":
             self.tableWidget_2.clearContents()
