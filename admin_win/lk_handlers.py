@@ -98,8 +98,8 @@ class lk(QMainWindow, Ui_MainWindow):
             er=error(self)
             er.show()
             return
-        cursor = self.help.conn.cursor()
         try:
+            cursor = self.help.conn.cursor()
             cursor.execute("UPDATE Материал SET Количество=Количество-%s" 
             "WHERE Название=%s",(int(self.lineEdit_col.text()),self.lineEdit_mat.text(),))
             cursor.execute('INSERT INTO Расход(Номер_записи,Название,Количество) VALUES(%s,%s,%s)',(int(self.lineEdit_numb.text()),self.lineEdit_mat.text(),int(self.lineEdit_col.text()),))
@@ -109,8 +109,7 @@ class lk(QMainWindow, Ui_MainWindow):
             er=good(self)
             cursor.close()
             er.show()
-        except :
+        except:
             er=error(self)
             er.label_2.setText("Данные")
             er.show()
-        cursor.close()

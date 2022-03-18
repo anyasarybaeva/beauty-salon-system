@@ -351,11 +351,14 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         cursor.close()
 
     def btn_find_zap(self):
+        cursor = self.help.conn.cursor()
         if self.lineEdit_5.text()=="":
             self.tableWidget_2.clearContents()
-            self.fill_table_zapis()
+            cursor.execute('SELECT * FROM Запись',)
+            #self.fill_table_zapis()
+            self.help.fill_table(cursor,self.tableWidget_2)
+            cursor.close()
             return
-        cursor = self.help.conn.cursor()
         try:
             cursor.execute('SELECT * FROM Запись WHERE Код_сотрудника=%s',(int(self.lineEdit_5.text()),))
             self.tableWidget_2.clearContents()
