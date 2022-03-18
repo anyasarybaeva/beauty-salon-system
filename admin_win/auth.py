@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
 )
 import psycopg2
 from admin_win.lk_handlers import lk
-
+from admin_win.lk_admin_handlers import lk_admin
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -23,7 +23,7 @@ class Ui_Dialog(object):
         self.lineEdit.setGeometry(QtCore.QRect(140, 120, 113, 21))
         self.lineEdit.setObjectName("lineEdit")
         self.label_2 = QtWidgets.QLabel(Dialog)
-        self.label_2.setGeometry(QtCore.QRect(90, 120, 60, 16))
+        self.label_2.setGeometry(QtCore.QRect(90, 120, 50, 16))
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(Dialog)
         self.label_3.setGeometry(QtCore.QRect(80, 150, 60, 16))
@@ -51,8 +51,12 @@ class Ui_Dialog(object):
         self.pushButton.setText(_translate("Dialog", "Вход"))
     
     def check_data(self):
-        if self.lineEdit.text()=="admin" or self.lineEdit_2.text()=="admin" :
-            self.error_label.setText( "Вход под админом")
+        if self.lineEdit.text()=='' or self.lineEdit_2.text()=='':
+            return
+        if self.lineEdit.text()=="admin" and self.lineEdit_2.text()=="admin" :
+            win=lk_admin(self)
+            self.hide()
+            win.show()
         elif self.lineEdit.text()!=self.lineEdit_2.text():
             self.error_label.setText( "ошибка")
         else:
@@ -71,7 +75,6 @@ class Ui_Dialog(object):
                     self.error_label.setText( "ошибка")
             cursor.close()
             conn.close() 
-        
 
 class auth(QMainWindow, Ui_Dialog):
     def __init__(self, parent=None):

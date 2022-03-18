@@ -86,16 +86,23 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "Cотрудники"))
     #extra method
-    def fill_list(self):
+    def fill_list(self):#add servic
         conn = psycopg2.connect(dbname='салон красоты', user='annasarybaeva', host='localhost')
         cursor = conn.cursor()
         cursor.execute('SELECT ФИО FROM Сотрудник WHERE Статус=%s',('работает',))
-        for row in cursor:#mb add extra colom
-        #    cursor1=conn.cursor()
-        #    cursor1.execute('SELECT Название_услуги FROM Работа WHERE Код_сотрудника in(select Код from Сотрудник where ФИО=%s)',(row[0],))
-            self.listWidget.addItem((row[0]))
+        for row in cursor:
+            cursor1=conn.cursor()
+            cursor1.execute('SELECT Название_услуги FROM Работа WHERE Код_сотрудника in(select Код from Сотрудник where ФИО=%s)',(row[0],))
+            result=row[0]+" - "
+            for row1 in cursor1:
+                for ser in row1:
+                    result+=" "+ser+", "
+            self.listWidget.addItem(result)
+            cursor1.close()
+        self.listWidget.sortItems()
         cursor.close()
         conn.close()
+
 class master(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)

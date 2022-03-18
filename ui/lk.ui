@@ -66,9 +66,9 @@
      <widget class="QTableWidget" name="tableWidget_2">
       <property name="geometry">
        <rect>
-        <x>150</x>
+        <x>10</x>
         <y>10</y>
-        <width>491</width>
+        <width>781</width>
         <height>391</height>
        </rect>
       </property>
@@ -76,25 +76,50 @@
        <property name="text">
         <string>Номер</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>Телефон</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
        </property>
       </column>
       <column>
        <property name="text">
         <string>Название услуги</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>Дата</string>
        </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>Статус</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
        </property>
        <property name="background">
         <color>
@@ -117,11 +142,16 @@
      <widget class="QPushButton" name="pushButton_2">
       <property name="geometry">
        <rect>
-        <x>430</x>
-        <y>430</y>
-        <width>121</width>
+        <x>420</x>
+        <y>420</y>
+        <width>141</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(102, 255, 58);</string>
@@ -134,7 +164,7 @@
       <property name="geometry">
        <rect>
         <x>330</x>
-        <y>430</y>
+        <y>420</y>
         <width>81</width>
         <height>21</height>
        </rect>
@@ -143,11 +173,16 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>430</y>
-        <width>71</width>
+        <x>270</x>
+        <y>420</y>
+        <width>51</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Номер</string>
@@ -163,8 +198,8 @@
        <rect>
         <x>20</x>
         <y>10</y>
-        <width>311</width>
-        <height>391</height>
+        <width>341</width>
+        <height>431</height>
        </rect>
       </property>
       <property name="widgetResizable">
@@ -175,8 +210,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>309</width>
-         <height>389</height>
+         <width>339</width>
+         <height>429</height>
         </rect>
        </property>
        <widget class="QTableWidget" name="tableWidget">
@@ -184,23 +219,28 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>311</width>
-          <height>391</height>
+          <width>341</width>
+          <height>431</height>
          </rect>
         </property>
         <column>
          <property name="text">
           <string>Материал</string>
          </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Дата поставки</string>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
          </property>
         </column>
         <column>
          <property name="text">
           <string>Количество</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
          </property>
         </column>
        </widget>
@@ -209,11 +249,16 @@
      <widget class="QPushButton" name="pushButton">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>110</y>
-        <width>121</width>
+        <x>430</x>
+        <y>140</y>
+        <width>231</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(102, 255, 58);</string>
@@ -225,9 +270,9 @@
      <widget class="QLineEdit" name="lineEdit">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>10</y>
-        <width>81</width>
+        <x>500</x>
+        <y>90</y>
+        <width>161</width>
         <height>21</height>
        </rect>
       </property>
@@ -235,152 +280,144 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>10</y>
-        <width>71</width>
+        <x>420</x>
+        <y>90</y>
+        <width>81</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Материал</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_col">
+     <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
-        <x>520</x>
-        <y>70</y>
-        <width>81</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>40</y>
-        <width>91</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Дата поставки</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>380</x>
-        <y>70</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Количество</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_date">
-      <property name="geometry">
-       <rect>
-        <x>510</x>
-        <y>40</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>270</y>
-        <width>71</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Материал</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_mat">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>270</y>
-        <width>81</width>
-        <height>21</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_numb">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>300</y>
-        <width>81</width>
-        <height>21</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>300</y>
-        <width>91</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Номер записи</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>400</x>
-        <y>330</y>
-        <width>81</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Количество</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_col">
-      <property name="geometry">
-       <rect>
-        <x>520</x>
-        <y>330</y>
-        <width>81</width>
-        <height>21</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_3">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>370</y>
-        <width>231</width>
-        <height>20</height>
+        <x>360</x>
+        <y>180</y>
+        <width>441</width>
+        <height>261</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(102, 255, 58);</string>
+       <string notr="true">background-color: rgb(180, 255, 221);</string>
       </property>
-      <property name="text">
-       <string>Внести информацию о расходе</string>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>50</y>
+         <width>81</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Материал</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_mat">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>50</y>
+         <width>181</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>80</y>
+         <width>111</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Номер записи</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_numb">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>80</y>
+         <width>181</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_col">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>110</y>
+         <width>181</width>
+         <height>21</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_7">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>110</y>
+         <width>91</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Количество</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>200</y>
+         <width>271</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(102, 255, 58);</string>
+       </property>
+       <property name="text">
+        <string>Внести информацию о расходе</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>

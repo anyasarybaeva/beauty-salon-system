@@ -1,17 +1,12 @@
-from select import select
-from traceback import print_tb
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (
     QApplication, QDialog, QMainWindow, QMessageBox,QListWidget,QListWidgetItem
 )
-import psycopg2
-from admin_win.lk import Ui_MainWindow
+from admin_win.ui_win.lk import Ui_MainWindow
 from utils.utils import db
-from admin_win.error import Ui_Dialog
-class error(QMainWindow,Ui_Dialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setupUi(self)
+from admin_win.dialog_win.dialog_win import good,error
+
 class lk(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -23,6 +18,7 @@ class lk(QMainWindow, Ui_MainWindow):
         self.fill_table_material()
         self.pushButton_2.clicked.connect(self.btn_handler)
         self.pushButton.clicked.connect(self.btn_mat_handler)
+        self.pushButton_3.clicked.connect(self.btn_ras_handler)
 
     def name(self,number):
         cursor = self.help.conn.cursor()
@@ -30,6 +26,7 @@ class lk(QMainWindow, Ui_MainWindow):
         for row in cursor:
             self.name_label.setText(row[0]+"  личный кабинет")
         cursor.close()
+        
     def fill_table_zanis(self):
         cursor1 = self.help.conn.cursor()
         cursor1.execute('SELECT Номер,Номер_телефона,Название_услуги,Дата ,Статус FROM Запись')
@@ -56,29 +53,64 @@ class lk(QMainWindow, Ui_MainWindow):
         cursor.execute('SELECT * FROM Материал')
         self.help.fill_table(cursor,self.tableWidget)
         cursor.close()
-    def btn_handler(self):
+
+    def btn_handler(self):#not working
         if self.lineEdit_2.text()=="":
             er=error(self)
             er.show()
             return
-        new_stat='Архивная'
         cursor1 = self.help.conn.cursor()
-        if self.dict[int(self.lineEdit_2.text())].text()=='Архивная':
-            new_stat='Актуальная'
-            self.dict[int(self.lineEdit_2.text())].setText("Актуальная")
-            self.dict[int(self.lineEdit_2.text())].setStyleSheet("background-color: rgb(0, 255, 0);")
-        else:
-            new_stat='Архивная'
-            self.dict[int(self.lineEdit_2.text())].setText("Архивная")
-            self.dict[int(self.lineEdit_2.text())].setStyleSheet("background-color: rgb(255, 0, 10);")
-        cursor1.execute("UPDATE Запись SET Статус=%s"
-            "WHERE Номер = %s",
-            (new_stat,int(self.lineEdit_2.text())),)
-        self.help.conn.commit()
-        cursor1.close()
+        if self.dict[int(self.lineEdit_2.text())].text()=='Актуальная':
+            try:
+                cursor1.execute("UPDATE Запись SET Статус=%s"
+                "WHERE Номер = %s",
+                ("Архивная",int(self.lineEdit_2.text())),)
+                self.help.conn.commit()
+                cursor1.close()
+                self.dict[int(self.lineEdit_2.text())].setText("Архивная")
+                self.dict[int(self.lineEdit_2.text())].setStyleSheet("background-color: rgb(255, 0, 10);")    
+            except:
+                er=error(self)
+                er.label_2.setText("Данные")
+                er.show()
+
     def btn_mat_handler(self):
+            
+        cursor = self.help.conn.cursor()
         if self.lineEdit.text()=="":
+            cursor.execute('SELECT * FROM Материал')
+            self.tableWidget.clearContents()
+            self.help.fill_table(cursor,self.tableWidget)
+            return
+        try:
+            cursor.execute('SELECT * FROM Материал WHERE Название like %s',(self.lineEdit.text()+'%',))
+            self.tableWidget.clearContents()
+            self.help.fill_table(cursor,self.tableWidget)
+            cursor.close()
+        except:
+            er=error(self)
+            er.label_2.setText("Данные")
+            er.show()
+        cursor.close()
+
+    def btn_ras_handler(self):
+        if self.lineEdit_col.text()=="" or self.lineEdit_mat.text()=="" or self.lineEdit_numb.text()=="":
             er=error(self)
             er.show()
             return
-        cursor1 = self.help.conn.cursor()
+        cursor = self.help.conn.cursor()
+        try:
+            cursor.execute("UPDATE Материал SET Количество=Количество-%s" 
+            "WHERE Название=%s",(int(self.lineEdit_col.text()),self.lineEdit_mat.text(),))
+            cursor.execute('INSERT INTO Расход(Номер_записи,Название,Количество) VALUES(%s,%s,%s)',(int(self.lineEdit_numb.text()),self.lineEdit_mat.text(),int(self.lineEdit_col.text()),))
+            self.help.conn.commit()
+            self.tableWidget.clearContents()
+            self.fill_table_material()
+            er=good(self)
+            cursor.close()
+            er.show()
+        except :
+            er=error(self)
+            er.label_2.setText("Данные")
+            er.show()
+        cursor.close()
