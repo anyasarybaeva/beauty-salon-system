@@ -28,7 +28,7 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         self.fill_table_cliente()
         self.pushButton_7.clicked.connect(self.btn_enter_client)
 
-        #sortudnic tableWidget_7
+        #sortudnic 
         self.fill_table_master()
         self.pushButton_delete_2.clicked.connect(self.btn_find_mast)
         self.pushButton_delete_3.clicked.connect(self.btn_change_mast)
@@ -69,6 +69,7 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             er.show()
     
     def btn_enter_ras(self):
+        self.help=db()
         if self.lineEdit_col.text()=="" or self.lineEdit_mat.text()=="" or self.lineEdit_numb.text()=="":
             er=error(self)
             er.show()
@@ -80,7 +81,8 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             cursor.execute('INSERT INTO Расход(Номер_записи,Название,Количество) VALUES(%s,%s,%s)',(int(self.lineEdit_numb.text()),self.lineEdit_mat.text(),int(self.lineEdit_col.text()),))
             self.help.conn.commit()
             self.tableWidget.clearContents()
-            self.fill_table_mat()
+            cursor.execute('SELECT * FROM Материал')
+            self.help.fill_table(cursor,self.tableWidget)            
             er=good(self)
             cursor.close()
         except :
@@ -89,6 +91,7 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         er.show()
     
     def btn_enter_mat(self):
+        self.help=db()
         if self.lineEdit_mat_6.text()=="" or self.lineEdit_numb_4.text()=="":
             er=error(self)
             er.show()
@@ -98,7 +101,8 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             cursor.execute('INSERT INTO Материал(Название,Количество) VALUES(%s,%s)',(self.lineEdit_mat_6.text(),int(self.lineEdit_numb_4.text()),))
             self.help.conn.commit()
             self.tableWidget.clearContents()
-            self.fill_table_mat()
+            cursor.execute('SELECT * FROM Материал')
+            self.help.fill_table(cursor,self.tableWidget)            
             cursor.close()
             er=good(self)
         except :
@@ -124,7 +128,8 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             "WHERE Название=%s",(int(self.lineEdit_numb_4.text()),self.lineEdit_mat_6.text(),))
             self.help.conn.commit()
             self.tableWidget.clearContents()
-            self.fill_table_mat()
+            cursor.execute('SELECT * FROM Материал')
+            self.help.fill_table(cursor,self.tableWidget)            
             cursor.close()
         except:
             er=error(self)
@@ -150,9 +155,9 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             self.help.conn.commit()
             er=good(self)
             self.tableWidget_3.clearContents()
-            self.fill_table_cliente()
+            cursor1.execute('SELECT * FROM Клиент')
+            self.help.fill_table(cursor1,self.tableWidget_3)            
             cursor1.close()
-
         except:
             er=error(self)
             er.label_2.setText("Данные")
@@ -206,9 +211,10 @@ class lk_admin(QMainWindow, Ui_MainWindow):
                 cursor1.execute("UPDATE Сотрудник SET ФИО=%s" 
                 "WHERE Код=%s",(self.lineEdit_mat_11.text(),int(self.lineEdit_mat_8.text()),))
                 cursor1.close()
-            er=good(self)
-            self.tableWidget_7.clearContents()
-            self.fill_table_master()
+                er=good(self)
+                self.tableWidget_7.clearContents()
+                cursor1.execute('SELECT * FROM Сотрудник')
+                self.help.fill_table(cursor1,self.tableWidget_7)
         except:
             er=error(self)
             er.label_2.setText("Данные")
@@ -221,11 +227,12 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             return
         try:
             cursor = self.help.conn.cursor()
-            cursor.execute('DELETE FROM Сотрудники WHERE Код=%s',(int(self.lineEdit_mat_7.text()),))
+            cursor.execute('DELETE FROM Сотрудник WHERE Код=%s',(int(self.lineEdit_mat_7.text()),))
             self.help.conn.commit()
             er=good(self)
             self.tableWidget_7.clearContents()
-            self.fill_table_master()
+            cursor.execute('SELECT * FROM Сотрудник')
+            self.help.fill_table(cursor,self.tableWidget_7)
             cursor.close()
         except:
             er=error(self)
@@ -240,11 +247,12 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             return
         try:
             cursor = self.help.conn.cursor()
-            cursor.execute('INSERT INTO Сотрудники(Код,Номер_телефона,ФИО) VALUES(%s,%s,%s)',(int(self.lineEdit_mat_8.text()),self.lineEdit_mat_9.text(),self.lineEdit_mat_11.text(),))
+            cursor.execute('INSERT INTO Сотрудник(Код,Номер_телефона,ФИО) VALUES(%s,%s,%s)',(int(self.lineEdit_mat_8.text()),self.lineEdit_mat_9.text(),self.lineEdit_mat_11.text(),))
             er=good(self)
             self.help.conn.commit()
             self.tableWidget_7.clearContents()
-            self.fill_table_master()
+            cursor.execute('SELECT * FROM Сотрудник')
+            self.help.fill_table(cursor,self.tableWidget_7)
             cursor.close()
         except:
             er=error(self)
@@ -261,8 +269,8 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             self.dict_ser[row[0]]=row[2]
             self.tableWidget_8.setItem(tablerow,0,QtWidgets.QTableWidgetItem(str(row[0])))
             self.tableWidget_8.setItem(tablerow,1,QtWidgets.QTableWidgetItem(str(row[1])))
-            self.tableWidget_8.setItem(tablerow,3,QtWidgets.QTableWidgetItem(str(row[2])))
-            self.tableWidget_8.setItem(tablerow,2,QtWidgets.QTableWidgetItem(str(row[3])))
+            self.tableWidget_8.setItem(tablerow,2,QtWidgets.QTableWidgetItem(str(row[2])))
+            self.tableWidget_8.setItem(tablerow,3,QtWidgets.QTableWidgetItem(str(row[3])))
             tablerow+=1
         cursor1.close()
 
@@ -283,6 +291,7 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         cursor.close()
 
     def btn_change_stat_serv(self):
+        self.help=db()
         if self.lineEdit_mat_12.text()=="":
             er=error(self)
             er.show()
@@ -306,6 +315,7 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             er.show()
 
     def btn_change_price_serv(self):
+        self.help=db()
         if self.lineEdit_mat_19.text()=="":
             er=error(self)
             er.show()
@@ -317,14 +327,18 @@ class lk_admin(QMainWindow, Ui_MainWindow):
                 (int(self.lineEdit_mat_19.text()),self.lineEdit_mat_12.text()),)
             self.help.conn.commit()
             self.tableWidget_8.clearContents()
-            self.fill_table_service()
-            cursor.close()
+            cursor.execute('SELECT * FROM Услуга')
+            self.tableWidget_8.clearContents()
+            self.help.fill_table(cursor,self.tableWidget_8)
         except:
             er=error(self)
             er.label_2.setText("Данные")
             er.show()
+        cursor.close()
+
         
     def btn_add_serv(self):#good
+        self.help=db()
         if self.lineEdit_mat_13.text()=="" or self.lineEdit_mat_17.text()=="":
             er=error(self)
             er.show()
@@ -334,12 +348,15 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             cursor.execute('INSERT INTO Услуга(Название,Цена) VALUES(%s,%s)',(self.lineEdit_mat_13.text(),int(self.lineEdit_mat_17.text()),))
             self.help.conn.commit()
             self.tableWidget_8.clearContents()
-            self.fill_table_service()
-            cursor.close()
+            self.dict_ser[self.lineEdit_mat_13.text()]='Активная'
+            cursor.execute('SELECT * FROM Услуга')
+            self.help.fill_table(cursor,self.tableWidget_8)            
         except:
             er=error(self)
             er.label_2.setText("Данные")
             er.show()
+        cursor.close()
+
     
     #zapis
     def fill_table_zapis(self):
@@ -382,7 +399,9 @@ class lk_admin(QMainWindow, Ui_MainWindow):
                 ("Архивная",int(self.lineEdit_2.text()),),)
             self.help.conn.commit()
             self.tableWidget_2.clearContents()
-            self.fill_table_zapis()
+            cursor.execute('SELECT * FROM Запись',)
+            self.help.fill_table(cursor,self.tableWidget_2)
+            cursor.close()
         except:
             er=error(self)
             er.label_2.setText("Данные")
@@ -401,7 +420,8 @@ class lk_admin(QMainWindow, Ui_MainWindow):
                 (self.lineEdit_10.text(),int(self.lineEdit_2.text()),),)
             self.help.conn.commit()
             self.tableWidget_2.clearContents()
-            self.fill_table_zapis()
+            cursor.execute('SELECT * FROM Запись',)
+            self.help.fill_table(cursor,self.tableWidget_2)
             cursor.close()
         except:
             er=error(self)
@@ -419,7 +439,8 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             self.help.conn.commit()
             er=good(self)
             self.tableWidget_2.clearContents()
-            self.fill_table_zapis()
+            cursor.execute('SELECT * FROM Запись',)
+            self.help.fill_table(cursor,self.tableWidget_2)
             cursor.close()
         except:
             er=error(self)
@@ -458,8 +479,9 @@ class lk_admin(QMainWindow, Ui_MainWindow):
             cursor.execute('INSERT INTO Запись(Номер,Номер_телефона,Код_сотрудника,Название_услуги,Дата) VALUES(%s,%s,%s,%s,%s)',(int(num)+1,self.lineEdit_7.text(),int(self.lineEdit_8.text()),self.lineEdit_9.text(),self.lineEdit_11.text(),))
             self.help.conn.commit()
             er=good(self)
-            self.tableWidget_8.clearContents()
-            self.fill_table_zapis()
+            self.tableWidget_2.clearContents()
+            cursor.execute('SELECT * FROM Запись',)
+            self.help.fill_table(cursor,self.tableWidget_2)
             cursor.close()
         except:
             er=error(self)

@@ -54,7 +54,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>4</number>
     </property>
     <property name="tabBarAutoHide">
      <bool>true</bool>
@@ -1360,16 +1360,6 @@ background-color: rgb(0, 255, 18);</string>
       </column>
       <column>
        <property name="text">
-        <string>Цена</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-      </column>
-      <column>
-       <property name="text">
         <string>Статус</string>
        </property>
        <property name="font">
@@ -1392,6 +1382,16 @@ background-color: rgb(0, 255, 18);</string>
           <blue>0</blue>
          </color>
         </brush>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Цена</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
        </property>
       </column>
      </widget>
