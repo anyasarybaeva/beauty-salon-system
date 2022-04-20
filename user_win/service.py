@@ -44,7 +44,6 @@ class Ui_MainWindow(object):
         self.QlistWidget.setGeometry(QtCore.QRect(370, 240, 256, 291))
         self.QlistWidget.setStyleSheet("background-color: rgb(255, 170, 252);")
         self.QlistWidget.setObjectName("listWidget")
-        #add list here
         self.fill_list()
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(440, 30, 251, 51))
