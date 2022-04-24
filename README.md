@@ -15,6 +15,8 @@
         conn = psycopg2.connect(dbname='салон красоты', user='annasarybaeva', host='localhost')
         cursor = conn.cursor()
 ```
+Манипуляция с данными выполняется с помощью библиотеки [pandas](https://pandas.pydata.org/docs/index.html)
+
 
 ## Графический интерфейс
 
@@ -34,6 +36,8 @@
 ![alt text](https://github.com/anyasarybaeva/beauty-salon-system/raw/master/img/screen/lk_admin.png "Личный кабинет администратора")
 
 ## Источники
+
+[pandas](https://pandas.pydata.org/docs/index.html)
 [psycopg2](https://www.psycopg.org/docs/usage.html)
 [Qt Designer](https://doc.qt.io/qt-5/qtdesigner-manual.html)
 [PyQt5](https://build-system.fman.io/pyqt5-tutorial)

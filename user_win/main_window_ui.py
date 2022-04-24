@@ -108,22 +108,23 @@ class Ui_MainWindow(object):
         self.btn_services_2.clicked.connect(self.open_examples_win)
         self.btn_services_3.clicked.connect(self.open_about_win)
         self.pushButton.clicked.connect(self.open_auth)
-    #handlers
+
     def open_master_win(self):
         self.newWin = master(self)
         self.newWin.show()
+
     def open_service_win(self):
         self.newWin = service(self)
-        #self.hide()
         self.newWin.show()
+
     def open_examples_win(self):
         self.newWin = nails_examples(self)
-        #self.hide()
-        self.newWin.show()        
+        self.newWin.show()   
+
     def open_about_win(self):
         self.newWin = about(self)
-        #self.hide()
         self.newWin.show()   
+        
     def open_auth(self):
         self.newWin = auth(self)
         self.hide()

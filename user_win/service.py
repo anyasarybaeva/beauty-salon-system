@@ -12,7 +12,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (
     QApplication, QDialog, QMainWindow, QMessageBox,QListWidget,QListWidgetItem
 )
-import psycopg2
+from utils.utils import db
+import pandas as pd
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -62,14 +63,13 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_2.setText(_translate("MainWindow", "Услуги"))
     def fill_list(self):
-        conn = psycopg2.connect(dbname='салон красоты', user='annasarybaeva', host='localhost')
-        cursor = conn.cursor()
-        cursor.execute('SELECT Название,Цена FROM Услуга WHERE Статус=%s',('Активная',))
-        for row in cursor:
-            self.QlistWidget.addItem((row[0].lower())+" - "+str(row[1])+" руб.")
-        cursor.close()
-        conn.close()
+        dbase=db()
+        sql=('SELECT Название,Цена FROM Услуга WHERE Статус=%s')
+        df = pd.read_sql(sql, dbase.conn,params=['Активная'])
+        for row in df.values.tolist():
+            self.QlistWidget.addItem(row[0]+" - "+str(row[1]))
         self.QlistWidget.sortItems()
+        dbase.conn.close()
 class service(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)

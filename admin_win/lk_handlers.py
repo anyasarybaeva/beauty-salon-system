@@ -7,49 +7,48 @@ from PyQt5.QtWidgets import (
 from admin_win.ui_win.lk import Ui_MainWindow
 from utils.utils import db
 from admin_win.dialog_win.dialog_win import good,error
-global n
+import pandas as pd
+
 class lk(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
+    def __init__(self,num, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+
         self.help=db()
+        self.error=error(self)
+        self.success=good(self)
+        self.fill_table_material()
+
         self.tableWidget.setSortingEnabled(True)
         self.tableWidget_2.setSortingEnabled(True)
-        self.fill_table_material()
-        self.pushButton_2.clicked.connect(self.btn_handler)
-        self.pushButton.clicked.connect(self.btn_mat_handler)
-        self.pushButton_3.clicked.connect(self.btn_ras_handler)
+      
+        self.pushButton_2.clicked.connect(self.btn_appointment)
+        self.pushButton.clicked.connect(self.btn_material)
+        self.pushButton_3.clicked.connect(self.btn_usage)
 
     def name(self,number):
         cursor = self.help.conn.cursor()
         cursor.execute('SELECT ФИО FROM Сотрудник WHERE Код=%s',(number,))
-        for row in cursor:
-            self.name_label.setText(row[0]+"  личный кабинет")
+        name=cursor.fetchone()
+        self.name_label.setText(name[0]+"  личный кабинет")
         self.num=number
-        self.fill_table_zanis()
-
+        self.fill_table_appointment()
         cursor.close()
         
-    def fill_table_zanis(self):
-        cursor1 = self.help.conn.cursor()
-        cursor1.execute('SELECT Номер,Номер_телефона,Название_услуги,Дата ,Статус FROM Запись WHERE Код_сотрудника=%s',(int(self.num),))
+    def fill_table_appointment(self):
+        sql=('SELECT Номер,Номер_телефона,Название_услуги,Дата ,Статус FROM Запись WHERE Код_сотрудника=%s')
+        self.zapis_df=pd.read_sql(sql, self.help.conn,params=[self.num])
         self.tableWidget_2.setRowCount(100)
+
         tablerow=0
-        self.dict={}
-        for row in cursor1:
-            self.dict[row[0]]=QtWidgets.QPushButton(self.widget)
-            if row[4]=='Актуальная':
-                self.dict[row[0]].setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.help.fill_table(self.zapis_df.values.tolist(),self.tableWidget_2)
+        for row in self.zapis_df.values.tolist():
+            if  row[4]=='Актуальная':
+                self.tableWidget_2.item(tablerow,4).setBackground(QtGui.QColor(0,255,0))
             else:
-                self.dict[row[0]].setStyleSheet("background-color: rgb(255, 0, 10);")
-            self.dict[row[0]].setText(row[4])
-            self.tableWidget_2.setItem(tablerow,0,QtWidgets.QTableWidgetItem(str(row[0])))
-            self.tableWidget_2.setItem(tablerow,1,QtWidgets.QTableWidgetItem(str(row[1])))
-            self.tableWidget_2.setItem(tablerow,2,QtWidgets.QTableWidgetItem(str(row[2])))
-            self.tableWidget_2.setItem(tablerow,3,QtWidgets.QTableWidgetItem(str(row[3])))
-            self.tableWidget_2.setCellWidget(tablerow,4, self.dict[row[0]])
+                self.tableWidget_2.item(tablerow,4).setBackground(QtGui.QColor(255,0,0))
             tablerow+=1
-        cursor1.close()
+
     def fill_table_material(self):
         self.tableWidget.setRowCount(20)
         cursor = self.help.conn.cursor()
@@ -57,49 +56,48 @@ class lk(QMainWindow, Ui_MainWindow):
         self.help.fill_table(cursor,self.tableWidget)
         cursor.close()
 
-    def btn_handler(self):#not working
+    def btn_appointment(self):
         if self.lineEdit_2.text()=="":
-            er=error(self)
-            er.show()
+            self.error.label_2.setText("Пустое поле")
+            self.error.show()
             return
-        cursor1 = self.help.conn.cursor()
-        if self.dict[int(self.lineEdit_2.text())].text()=='Актуальная':
+        number=int(self.lineEdit_2.text())
+        if self.zapis_df[(self.zapis_df.Номер==number)& (self.zapis_df.Статус=='Архивная')].empty:
             try:
-                cursor1.execute("UPDATE Запись SET Статус=%s"
+                cursor = self.help.conn.cursor()
+                cursor.execute("UPDATE Запись SET Статус=%s"
                 "WHERE Номер = %s",
-                ("Архивная",int(self.lineEdit_2.text())),)
+                ("Архивная",number),)
                 self.help.conn.commit()
-                cursor1.close()
-                self.dict[int(self.lineEdit_2.text())].setText("Архивная")
-                self.dict[int(self.lineEdit_2.text())].setStyleSheet("background-color: rgb(255, 0, 10);")    
+                cursor.close()
+                self.zapis_df.loc[self.zapis_df.Номер==number,'Статус']='Архивная'                               
+                self.tableWidget_2.item(self.zapis_df.loc[self.zapis_df['Номер']==number].index[0],4).setBackground(QtGui.QColor(255,0,0))
             except:
-                er=error(self)
-                er.label_2.setText("Данные")
-                er.show()
+                self.error.label_2.setText("Данные")
+                self.error.show()
 
-    def btn_mat_handler(self):
-            
-        cursor = self.help.conn.cursor()
+    def btn_material(self):   
         if self.lineEdit.text()=="":
+            cursor = self.help.conn.cursor()
             cursor.execute('SELECT * FROM Материал')
             self.tableWidget.clearContents()
             self.help.fill_table(cursor,self.tableWidget)
-            return
+            cursor.close()
+            return  
         try:
+            cursor = self.help.conn.cursor()
             cursor.execute('SELECT * FROM Материал WHERE Название like %s',(self.lineEdit.text()+'%',))
             self.tableWidget.clearContents()
             self.help.fill_table(cursor,self.tableWidget)
             cursor.close()
         except:
-            er=error(self)
-            er.label_2.setText("Данные")
-            er.show()
-        cursor.close()
+            self.error.label_2.setText("Данные")
+            self.error.show()
 
-    def btn_ras_handler(self):
+    def btn_usage(self):
         if self.lineEdit_col.text()=="" or self.lineEdit_mat.text()=="" or self.lineEdit_numb.text()=="":
-            er=error(self)
-            er.show()
+            self.error.label_2.setText("Пустое поле")
+            self.error.show()
             return
         try:
             cursor = self.help.conn.cursor()
@@ -109,10 +107,8 @@ class lk(QMainWindow, Ui_MainWindow):
             self.help.conn.commit()
             self.tableWidget.clearContents()
             self.fill_table_material()
-            er=good(self)
             cursor.close()
-            er.show()
+            self.success.show()
         except:
-            er=error(self)
-            er.label_2.setText("Данные")
-            er.show()
+            self.error.label_2.setText("Данные")
+            self.show()

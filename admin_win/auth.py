@@ -15,8 +15,11 @@ from PyQt5.QtWidgets import (
 import psycopg2
 from admin_win.lk_handlers import lk
 from admin_win.lk_admin_handlers import lk_admin
+from utils.utils import db
+
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
+        self.help=db()
         Dialog.setObjectName("Dialog")
         Dialog.resize(400, 300)
         self.lineEdit = QtWidgets.QLineEdit(Dialog)
@@ -38,7 +41,6 @@ class Ui_Dialog(object):
         self.error_label.setGeometry(QtCore.QRect(150, 90, 60, 16))
         self.error_label.setText("")
         self.error_label.setObjectName("error_label")
-        #extra
         self.pushButton.clicked.connect(self.check_data)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -58,23 +60,19 @@ class Ui_Dialog(object):
             self.hide()
             win.show()
         elif self.lineEdit.text()!=self.lineEdit_2.text():
-            self.error_label.setText( "ошибка")
+            self.error_label.setText("ошибка")
         else:
-            conn = psycopg2.connect(dbname='салон красоты', user='annasarybaeva', host='localhost')
-            cursor = conn.cursor()
-            cursor.execute('SELECT Код FROM Сотрудник WHERE Статус=%s',('работает',))
-            for row in cursor:
-                if int(row[0])==int(self.lineEdit.text()):
-                    self.error_label.setText( "вход под сотрудником")
-                    self.newWin = lk(self)
-                    self.hide()
-                    self.newWin.name(row[0])
-                    self.newWin.show()   
-                    break
-                else:
-                    self.error_label.setText( "ошибка")
+            cursor = self.help.conn.cursor()
+            cursor.execute('SELECT Код FROM Сотрудник WHERE Статус=%s and Код=%s',('работает',int(self.lineEdit.text())))
+            row=cursor.fetchone()
+            if not row:
+                self.newWin = lk(self)
+                self.hide()
+                self.newWin.name(row[0])
+                self.newWin.show()  
+            else:
+                self.error_label.setText("ошибка")
             cursor.close()
-            conn.close() 
 
 class auth(QMainWindow, Ui_Dialog):
     def __init__(self, parent=None):

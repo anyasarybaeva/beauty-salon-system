@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (
 from admin_win.ui_win.lk_admin import Ui_MainWindow
 from utils.utils import db
 from admin_win.dialog_win.dialog_win import good,error
+import pandas as pd
 
 class lk_admin(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -17,12 +18,16 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         self.tableWidget.setSortingEnabled(True)
         self.tableWidget_2.setSortingEnabled(True)
         
-        #matherial
-        self.fill_table_mat()
-        self.pushButton.clicked.connect(self.btn_find)
-        self.pushButton_3.clicked.connect(self.btn_enter_ras)
-        self.pushButton_8.clicked.connect(self.btn_enter_mat)
-        self.pushButton_13.clicked.connect(self.btn_ch_mat)
+        #dialog windows
+        self.error=error(self)
+        self.success=good(self)
+
+        #material
+        self.fill_table_material()
+        self.pushButton.clicked.connect(self.btn_find_material)
+        self.pushButton_3.clicked.connect(self.btn_enter_usage)
+        self.pushButton_8.clicked.connect(self.btn_enter_material)
+        self.pushButton_13.clicked.connect(self.btn_change_material)
 
         #client
         self.fill_table_cliente()
@@ -50,93 +55,86 @@ class lk_admin(QMainWindow, Ui_MainWindow):
         self.pushButton_11.clicked.connect(self.btn_cancel_zap)
         self.pushButton_12.clicked.connect(self.btn_add_zap)
 
-    #need test
-    #matherial
-    def btn_find(self):
-        cursor = self.help.conn.cursor()
+    #material 
+    def fill_table_material(self):
+        self.material_df=pd.read_sql('SELECT * FROM Материал', self.help.conn)
+        self.tableWidget.setRowCount(20)
+        self.help.fill_table(self.material_df.values.tolist(),self.tableWidget)
+
+    def btn_find_material(self):
         if self.lineEdit.text()=="":
-            cursor.execute('SELECT * FROM Материал')
             self.tableWidget.clearContents()
-            self.help.fill_table(cursor,self.tableWidget)
+            self.help.fill_table(self.material_df.values.tolist(),self.tableWidget)
+            return
         try:
-            cursor.execute('SELECT * FROM Материал WHERE Название like %s',(self.lineEdit.text()+'%',))
             self.tableWidget.clearContents()
-            self.help.fill_table(cursor,self.tableWidget)
-            cursor.close()
+            self.help.fill_table(self.material_df[self.material_df.Название.str.startswith(self.lineEdit.text())].values.tolist(),self.tableWidget)
         except:
-            er=error(self)
-            er.label_2.setText("Нет совпаденией")
-            er.show()
+            self.error.label_2.setText("Нет совпаденией")
+            self.error.show()
     
-    def btn_enter_ras(self):
-        self.help=db()
+    def btn_enter_usage(self):
         if self.lineEdit_col.text()=="" or self.lineEdit_mat.text()=="" or self.lineEdit_numb.text()=="":
-            er=error(self)
-            er.show()
+            self.error.label_2.setText("Пустое поле")
+            self.error.show()
             return
         try:
             cursor = self.help.conn.cursor()
             cursor.execute("UPDATE Материал SET Количество=Количество-%s" 
             "WHERE Название=%s",(int(self.lineEdit_col.text()),self.lineEdit_mat.text(),))
+            self.help.conn.commit()
+            cursor.close()
+            cursor = self.help.conn.cursor()
             cursor.execute('INSERT INTO Расход(Номер_записи,Название,Количество) VALUES(%s,%s,%s)',(int(self.lineEdit_numb.text()),self.lineEdit_mat.text(),int(self.lineEdit_col.text()),))
             self.help.conn.commit()
             self.tableWidget.clearContents()
-            cursor.execute('SELECT * FROM Материал')
-            self.help.fill_table(cursor,self.tableWidget)            
-            er=good(self)
+            self.material_df.loc[self.material_df.Название==self.lineEdit_mat.text(),'Количество']-=int(self.lineEdit_col.text())
+            self.help.fill_table(self.material_df.values.tolist(),self.tableWidget)            
+            self.success.show()
             cursor.close()
         except :
-            er=error(self)
-            er.label_2.setText("Данные")
-        er.show()
+            self.error.label_2.setText("Данные")
+            self.error.show()
     
-    def btn_enter_mat(self):
-        self.help=db()
+    def btn_enter_material(self):
         if self.lineEdit_mat_6.text()=="" or self.lineEdit_numb_4.text()=="":
-            er=error(self)
-            er.show()
+            self.error.label_2.setText("Пустое поле")
+            self.error.show()
             return
         try:
             cursor = self.help.conn.cursor()
             cursor.execute('INSERT INTO Материал(Название,Количество) VALUES(%s,%s)',(self.lineEdit_mat_6.text(),int(self.lineEdit_numb_4.text()),))
             self.help.conn.commit()
             self.tableWidget.clearContents()
-            cursor.execute('SELECT * FROM Материал')
-            self.help.fill_table(cursor,self.tableWidget)            
+            new_row = {'Название':self.lineEdit_mat_6.text(), 'Количество':int(self.lineEdit_numb_4.text())}
+            self.material_df=self.material_df.append(new_row,ignore_index=True)
+            self.help.fill_table(self.material_df.values.tolist(),self.tableWidget)            
             cursor.close()
-            er=good(self)
+            self.success.show()
         except :
-            er=error(self)
-            er.label_2.setText("Данные")            
-        er.show()
+            self.error.label_2.setText("Данные")   
+            self.show()         
 
-    def fill_table_mat(self):
-        cursor = self.help.conn.cursor()
-        self.tableWidget.setRowCount(20)
-        cursor.execute('SELECT * FROM Материал')
-        self.help.fill_table(cursor,self.tableWidget)
-        cursor.close()
-
-    def btn_ch_mat(self):
+    def btn_change_material(self):
         if self.lineEdit_mat_6.text()=="" or self.lineEdit_numb_4.text()=="":
-            er=error(self)
-            er.show()
+            self.error.label_2.setText("Пустое поле")
+            self.error.show()
             return
         try:
             cursor = self.help.conn.cursor()
             cursor.execute("UPDATE Материал SET Количество=Количество+%s" 
             "WHERE Название=%s",(int(self.lineEdit_numb_4.text()),self.lineEdit_mat_6.text(),))
             self.help.conn.commit()
-            self.tableWidget.clearContents()
-            cursor.execute('SELECT * FROM Материал')
-            self.help.fill_table(cursor,self.tableWidget)            
             cursor.close()
+            self.tableWidget.clearContents()
+            self.material_df.loc[self.material_df.Название==self.lineEdit_mat_6.text(),'Количество']+=int(self.lineEdit_numb_4.text())
+            self.help.fill_table(self.material_df.values.tolist(),self.tableWidget)            
+            self.success.show()
         except:
-            er=error(self)
-            er.label_2.setText("Данные")            
-            er.show()
-    #client done
+            self.error.label_2.setText("Тут")            
+            self.error.show()
     
+    #client 
     def fill_table_cliente(self):
         cursor = self.help.conn.cursor()
         self.tableWidget_3.setRowCount(20)
